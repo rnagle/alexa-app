@@ -138,6 +138,7 @@ alexa.request = function(json) {
     }
   };
   this.type = function() {
+    console.log(this.data);
     try {
       return this.data.request.type;
     } catch (e) {
@@ -279,6 +280,7 @@ alexa.app = function(name, endpoint) {
         }
         if (!response.resolved) {
           if ("IntentRequest" === requestType || "Messaging.MessageReceived" === requestType) {
+            if ("IntentRequest" === requestType) {
             var intent = request_json.request.intent.name;
             if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
               if (false !== self.intents[intent]["function"](request, response)) {
