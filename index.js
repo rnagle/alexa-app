@@ -279,9 +279,9 @@ alexa.app = function(name, endpoint) {
           self.pre(request, response, requestType);
         }
         if (!response.resolved) {
-          if ("IntentRequest" === requestType || "Messaging.MessageReceived" === requestType) {
+          if ("IntentRequest" == requestType || "Messaging.MessageReceived" == requestType) {
             var intent;
-            if (requestType === "Messaging.MessageReceived") {
+            if ("Messaging.MessageReceived" == requestType) {
               intent = 'MessageReceived';
             } else {
               intent = request_json.request.intent.name;
