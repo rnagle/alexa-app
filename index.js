@@ -273,11 +273,12 @@ alexa.app = function(name, endpoint) {
           }
         }
         var requestType = request.type();
+        console.log('Request type: ' + requestType);
         if (typeof self.pre == "function") {
           self.pre(request, response, requestType);
         }
         if (!response.resolved) {
-          if ("IntentRequest" === requestType) {
+          if ("IntentRequest" === requestType || "Messaging.MessageReceived" === requestType) {
             var intent = request_json.request.intent.name;
             if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
               if (false !== self.intents[intent]["function"](request, response)) {
