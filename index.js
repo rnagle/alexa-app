@@ -167,7 +167,7 @@ alexa.request = function(json) {
       "application": this.data.session.application
     };
   }
-  this.userId = this.data.session.user.userId;
+  this.userId = this.sessionDetails.userId;
   this.applicationId = this.data.session.application.applicationId;
   this.sessionId = this.data.session.sessionId;
   this.sessionAttributes = this.data.session.attributes;
