@@ -280,7 +280,12 @@ alexa.app = function(name, endpoint) {
         }
         if (!response.resolved) {
           if ("IntentRequest" === requestType || "Messaging.MessageReceived" === requestType) {
-            var intent = request_json.request.intent.name;
+            var intent;
+            if (requestType === "Messaging.MessageReceived") {
+              intent = 'MessageReceived';
+            } else {
+              intent = request_json.request.intent.name;
+            }
             if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
               if (false !== self.intents[intent]["function"](request, response)) {
                 response.send();
