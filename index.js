@@ -168,13 +168,13 @@ alexa.request = function(json) {
     };
   }
   this.userId = this.sessionDetails.userId;
-  this.applicationId = this.data.session.application.applicationId;
-  this.sessionId = this.data.session.sessionId;
-  this.sessionAttributes = this.data.session.attributes;
-  this.isSessionNew = (true === this.data.session.new);
+  this.applicationId = this.sessionDetails.application.applicationId;
+  this.sessionId = this.sessionDetails.sessionId;
+  this.sessionAttributes = this.sessionDetails.attributes;
+  this.isSessionNew = (true === this.sessionDetails.new);
   this.session = function(key) {
     try {
-      return this.data.session.attributes[key];
+      return this.sessionDetails.attributes[key];
     } catch (e) {
       console.error("key not found on session attributes: " + key, e);
       return;
