@@ -138,7 +138,6 @@ alexa.request = function(json) {
     }
   };
   this.type = function() {
-    console.log(this.data);
     try {
       return this.data.request.type;
     } catch (e) {
@@ -274,7 +273,6 @@ alexa.app = function(name, endpoint) {
           }
         }
         var requestType = request.type();
-        console.log('Request type: ' + requestType);
         if (typeof self.pre == "function") {
           self.pre(request, response, requestType);
         }
