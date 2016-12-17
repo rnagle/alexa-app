@@ -145,22 +145,36 @@ alexa.request = function(json) {
       return null;
     }
   };
-  this.sessionDetails = {
-    "new": this.data.session.new,
-    "sessionId": this.data.session.sessionId,
-    "userId": this.data.session.user.userId,
-    "accessToken": this.data.session.user.accessToken || null,
-    "attributes": this.data.session.attributes,
-    "application": this.data.session.application
-  };
-  this.userId = this.data.session.user.userId;
-  this.applicationId = this.data.session.application.applicationId;
-  this.sessionId = this.data.session.sessionId;
-  this.sessionAttributes = this.data.session.attributes;
-  this.isSessionNew = (true === this.data.session.new);
+
+  if (typeof this.data.session == 'undefined') {
+    this.sessionDetails = {
+      "new": false,
+      "sessionId": null,
+      "userId": null,
+      "accessToken": null,
+      "attributes": {},
+      "application": {
+        applicationId: null
+      }
+    };
+  } else {
+    this.sessionDetails = {
+      "new": this.data.session.new,
+      "sessionId": this.data.session.sessionId,
+      "userId": this.data.session.user.userId,
+      "accessToken": this.data.session.user.accessToken || null,
+      "attributes": this.data.session.attributes,
+      "application": this.data.session.application
+    };
+  }
+  this.userId = this.sessionDetails.userId;
+  this.applicationId = this.sessionDetails.application.applicationId;
+  this.sessionId = this.sessionDetails.sessionId;
+  this.sessionAttributes = this.sessionDetails.attributes;
+  this.isSessionNew = (true === this.sessionDetails.new);
   this.session = function(key) {
     try {
-      return this.data.session.attributes[key];
+      return this.sessionDetails.attributes[key];
     } catch (e) {
       console.error("key not found on session attributes: " + key, e);
       return;
@@ -263,8 +277,13 @@ alexa.app = function(name, endpoint) {
           self.pre(request, response, requestType);
         }
         if (!response.resolved) {
-          if ("IntentRequest" === requestType) {
-            var intent = request_json.request.intent.name;
+          if ("IntentRequest" == requestType || "Messaging.MessageReceived" == requestType) {
+            var intent;
+            if ("Messaging.MessageReceived" == requestType) {
+              intent = 'MessageReceived';
+            } else {
+              intent = request_json.request.intent.name;
+            }
             if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
               if (false !== self.intents[intent]["function"](request, response)) {
                 response.send();
