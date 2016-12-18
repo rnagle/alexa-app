@@ -141,7 +141,7 @@ response.say("OK").send();
 
 # Request Handlers
 
-Your app can define a single handler for the Launch event and the SessionEnded event, and multiple Intent handlers.
+Your app can define a single handler for the Launch event, the SessionEnded event, the Messaging.MessageReceived event and multiple Intent handlers.
 
 ## LaunchRequest
 
@@ -149,6 +149,29 @@ Your app can define a single handler for the Launch event and the SessionEnded e
 app.launch(function(request,response) {
   response.say("Hello World");
   response.card("Hello World","This is an example card");
+});
+```
+
+## Messaging.MessageReceived
+
+This special type of intent is called when the skill is invoked outside the context of a session.
+
+In this scenario, a payload is sent to the skill, accessible via `request.data`.
+
+Use the `request.data` object to create notifications for users that consent to receiving messages/push notifications.
+
+```javascript
+app.messageRecevied(function(reuqest,response) {
+    var user = request.data.context.System.user;
+    if (user.permissions.consentToken) {
+        // Presence of `user.permissions.consentToken` indicates the user
+        // has allowed messaging/push notifications via the companion app.
+        // Proceed in creating a notification using the contents of `request.data`.
+    } else {
+        // Since this is outside the context of a user session,
+        // we can't use `response.say`.
+        console.log('The user: "' + user.userId + '" has not allowed notifications via the companion app.');
+    }
 });
 ```
 

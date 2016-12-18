@@ -236,6 +236,10 @@ alexa.app = function(name, endpoint) {
   this.sessionEnded = function(func) {
     self.sessionEndedFunc = func;
   };
+  this.messageReceivedFunc = null;
+  this.messageReceived = function(func) {
+    self.messageReceivedFunc = func;
+  }
   this.request = function(request_json) {
     return new Promise(function(resolve, reject) {
       var request = new alexa.request(request_json);
@@ -277,13 +281,8 @@ alexa.app = function(name, endpoint) {
           self.pre(request, response, requestType);
         }
         if (!response.resolved) {
-          if ("IntentRequest" == requestType || "Messaging.MessageReceived" == requestType) {
-            var intent;
-            if ("Messaging.MessageReceived" == requestType) {
-              intent = 'MessageReceived';
-            } else {
-              intent = request_json.request.intent.name;
-            }
+          if ("IntentRequest" === requestType) {
+            var intent = request_json.request.intent.name;
             if (typeof self.intents[intent] != "undefined" && typeof self.intents[intent]["function"] == "function") {
               if (false !== self.intents[intent]["function"](request, response)) {
                 response.send();
@@ -304,6 +303,14 @@ alexa.app = function(name, endpoint) {
               if (false !== self.sessionEndedFunc(request, response)) {
                 response.send();
               }
+            }
+          } else if ("Messaging.MessageReceived" === requestType) {
+            if (typeof self.messageReceivedFunc == "function") {
+              if (false !== self.messageReceivedFunc(request, response)) {
+                response.send();
+              }
+            } else {
+              response.fail("No messageReceived function defined.");
             }
           } else {
             throw "INVALID_REQUEST_TYPE";
