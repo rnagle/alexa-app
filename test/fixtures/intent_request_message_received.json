@@ -1,0 +1,14 @@
+{
+  "user": {
+    "userId": "amzn1.account.AM3B227HF3FAM1B261HK7FFM3A2"
+  },
+  "version": "1.0",
+  "request": {
+    "type": "Messaging.MessageReceived",
+    "requestId": "amzn1.echo-api.request.9cdaa4db-f20e-4c58-8d01-c75322d6c423",
+    "timestamp": "2015-05-13T12:34:56Z",
+    "data": {
+        "message": "This is a test notification."
+    }
+  }
+}
